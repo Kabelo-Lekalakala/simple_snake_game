@@ -1,0 +1,15 @@
+#scene {
+    border: 1px solid #000000;
+}
+
+#gameContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#btnSpace {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
