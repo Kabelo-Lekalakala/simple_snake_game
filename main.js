@@ -4,7 +4,21 @@ const ctx = canvas.getContext("2d");
 const button = document.getElementById("btn");
 //////////////////////////////////////////////////////////////////////////////////////
 
+class Rectangle {
+    constructor(xCord = 0, yCord = 0, unit = 20) {
+        this.xCord = xCord;
+        this.yCord = yCord;
+        this.unit = unit;
+    }
+    drawSnake(ctx) {
+        ctx.fillStyle = "green";
+        ctx.fillRect(this.xCord, this.yCord, this.unit, this.unit);
+    }
+}
+
 const gridSize = 20;
+const Player = new Rectangle(0, 0, gridSize, gridSize);
+
 let score;
 
 function randFood(min, max) {
@@ -29,22 +43,22 @@ let snakeColour = "green";
 let snake = [];
 snake[0] =
 {
-    x: 0,
-    y: 0
+    x: Player.xCord,
+    y: Player.yCord
 }
 
 let snakeX = snake[0].x;
 let snakeY = snake[0].y;
 
 function boundary() {
-    if (snakeY < 0 || snakeY > 500 || snakeX < 0 || snakeX > 500) {
+    if (Player.yCord || Player.yCord > 500 || Player.xCord < 0 || Player.xCord > 500) {
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 }
 
 function whereYOUat() {
-    console.log(`xPosition: ${snakeX},yPosition: ${snakeY}`);
+    console.log(`xPosition: ${Player.xCord},yPosition: ${Player.yCord}`);
 }
 
 function clear() {
@@ -58,11 +72,11 @@ document.addEventListener("keydown", (event) => {
     if (event.key === "j" && direction !== "up") direction = "down";
 });
 
-function moveSnake() {
-    if (direction === "right") snakeX += gridSize;
-    if (direction === "left") snakeX -= gridSize;
-    if (direction === "up") snakeY -= gridSize;
-    if (direction === "down") snakeY += gridSize;
+function moveDirection() {
+    if (direction === "right") Player.xCord += gridSize;
+    if (direction === "left") Player.xCord -= gridSize;
+    if (direction === "up") Player.yCord -= gridSize;
+    if (direction === "down") Player.yCord += gridSize;
 }
 
 function drawSnake() {
@@ -70,6 +84,7 @@ function drawSnake() {
         ctx.fillStyle = snakeColour;
         ctx.fillRect(snake[i].x, snake[i].y, gridSize, gridSize);
     }
+    Player.drawSnake(ctx);
 }
 
 function checkScore() {
@@ -84,8 +99,8 @@ function checkScore() {
         snake.pop();
     }
     let newHead = {
-        x: snakeX,
-        y: snakeY
+        x: Player.xCord,
+        y: Player.yCord
     }
     snake.unshift(newHead);
 }
@@ -96,18 +111,18 @@ function checkScore() {
 ///////////////////////////////////////////////////////////////////////////
 
 
-// Start movement every 1 second
+// Start movement every 100ms 
 function startGame() {
     if (!movementInterval) {
         movementInterval = setInterval(() => {
             clear();
-            moveSnake();
+            moveDirection();
             drawSnake();
             whereYOUat();
             checkScore();
             ctx.fillStyle = foodColour;
             ctx.fillRect(food.x, food.y, gridSize, gridSize);
-            boundary();
+            // boundary();
         }, 100);
     }
 
